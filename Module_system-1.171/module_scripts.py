@@ -50779,4 +50779,31 @@ scripts = [
     ]),
    #INVASION MODE END
      
+  #script_get_penalty_on_horseback
+  # Want to create constant flag for items that modifies values \
+  # by checking if on horseback
+  # example: itm_large_shield | shield_width(150) | penalty_on_horseback | spd_rting(82)
+  #    penalty_on_horseback = () => .5 * spd_rting when on horse
+  #    spd_rting goes from 82 -> 41
+  #    This is to balance the overuse of large shields, \
+  #    especially on horseback over cavalry shields. Large \
+  #    shields are cumbersome and difficult to manuvere \
+  #    and block with while on a horseback.
+  # INPUT: arg1 = troop_no
+  # OUTPUT: trigger_result = modifier_value
+  ("get_penalty_on_horseback",
+  (try_begin),
+    (troop_get_inventory_slot,":cur_item1",":troop_no",ek_item_0),#Here we are getting items from slots 0,1,2,3
+    (troop_get_inventory_slot,":cur_item2",":troop_no",ek_item_1),#Those slots are where weapons are placed.
+    (troop_get_inventory_slot,":cur_item3",":troop_no",ek_item_2),#We get them all to a different :local. Now all those :local variables are equal to one of the items in slots.
+    (troop_get_inventory_slot,":cur_item4",":troop_no",ek_item_3),#Then we check each item, if it is the one we want.
+    (troop_get_inventory_slot,":cur_item5",":troop_no",ek_item_4),#Check for horse
+    (this_or_next|eq, ":cur_item1", "itm_with_penalty_on_horseback"),#These are conditions similar to the conditions above.
+    (this_or_next|eq, ":cur_item2", "itm_with_penalty_on_horseback"),#But we check multiple variables, so we use this_or_next|
+    (this_or_next|eq, ":cur_item3", "itm_with_penalty_on_horseback"),#As the name suggests it is either this contion or the next.
+    (eq, ":cur_item4", "itm_with_penalty_on_horseback"),#Since this one is the last one we don't need this_or_next. When any of the items is the item we want the script succeds.
+ 
+    (try_end),#Ends Trying For Skills.
+
+  )
 ]
